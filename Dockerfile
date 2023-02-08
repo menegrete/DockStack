@@ -82,7 +82,7 @@ ARG PROJECTS=" \
 # Clone DevStack, Requirements and OpenStack (Core) Projects
 #  - To properly detect a container environment,
 #    we need at least openstack-dev/devstack/commit/63666a2
-RUN git clone https:://git.openstack.org/openstack-dev/devstack --branch $DEVSTACK_BRANCH && \
+RUN git clone https://git.openstack.org/openstack-dev/devstack --branch $DEVSTACK_BRANCH && \
     git clone https://git.openstack.org/openstack/requirements --branch $DEVSTACK_BRANCH /opt/stack/requirements && \
     for \
         PROJECT in $PROJECTS; \
