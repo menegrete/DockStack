@@ -61,7 +61,7 @@ RUN apt-get update && apt-get --assume-yes --no-install-recommends install \
         # Network Detection (arp)
         net-tools \
         # Preload Fixes from /devstack/tools/fixup_stuff.sh
-        python-virtualenv \
+        python3-virtualenv \
         software-properties-common \
     # Cleanup
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
