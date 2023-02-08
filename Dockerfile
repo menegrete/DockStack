@@ -24,7 +24,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 #####################################################################
 ENV container docker
 # No need for graphical.target
-RUN systemctl set-default multi-user.target
+###RUN systemctl set-default multi-user.target
 # Gracefully stop systemd
 STOPSIGNAL SIGRTMIN+3
 # Cleanup unneeded services
