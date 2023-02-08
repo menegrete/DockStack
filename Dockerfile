@@ -110,7 +110,7 @@ RUN /devstack/tools/install_prereqs.sh \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install external pip, resolving missing python-setuptools and wheel errors
-RUN curl --silent --show-error https://bootstrap.pypa.io/get-pip.py | python
+RUN curl --silent --show-error https://bootstrap.pypa.io/pip/2.7/get-pip.py | python
 
 # Solve dependency conflict for urllib3 with pre-installed requests
 RUN pip install --upgrade --force-reinstall requests
