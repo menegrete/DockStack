@@ -62,6 +62,7 @@ RUN apt-get update && apt-get --assume-yes --no-install-recommends install \
         net-tools \
         # Preload Fixes from /devstack/tools/fixup_stuff.sh
         python3-virtualenv \
+        python-is-python3 \
         software-properties-common \
     # Cleanup
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
