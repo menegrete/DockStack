@@ -27,13 +27,6 @@ ENV container docker
 ###RUN systemctl set-default multi-user.target
 # Gracefully stop systemd
 STOPSIGNAL SIGRTMIN+3
-
-#setup user
-RUN useradd -s /bin/bash -d /opt/stack -m stack
-RUN apt-get update && apt-get install sudo -y 
-RUN sudo chmod +x /opt/stack
-RUN echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
-RUN sudo su stack && cd ~
 # Cleanup unneeded services
 RUN find /etc/systemd/system \
          /lib/systemd/system \
@@ -50,6 +43,8 @@ CMD ["/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]
 ####################
 # Get Missing External System Dependencies for DevStack Setup
 RUN apt-get update && apt-get --assume-yes --no-install-recommends install \
+        #sudo
+        sudo \
         # To Retrieve Fresh DevStack Sources
         ca-certificates \
         git \
@@ -73,6 +68,13 @@ RUN apt-get update && apt-get --assume-yes --no-install-recommends install \
         software-properties-common \
     # Cleanup
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Setup non-Root user "stack", as required by stack.sh
+RUN useradd -s /bin/bash -d /opt/stack -m stack
+RUN sudo chmod +x /opt/stack
+RUN echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+RUN sudo chown --recursive stack /devstack/
+RUN sudo su stack && cd ~
 
 ARG DEVSTACK_BRANCH="master"
 ARG PROJECTS_BRANCH="master"
@@ -129,11 +131,6 @@ RUN pip install \
         --constraint  /opt/stack/requirements/upper-constraints.txt \
         --requirement /opt/stack/requirements/global-requirements.txt \
         --requirement /opt/stack/requirements/test-requirements.txt
-
-# Setup non-Root user "stack", as required by stack.sh
-RUN useradd --shell /bin/bash --home-dir /opt/stack/ stack \
-    && echo "stack ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/stack \
-    && sudo chown --recursive stack /devstack/
 
 # Copy DevStack configuration, if file has changed
 COPY local.conf /devstack/
