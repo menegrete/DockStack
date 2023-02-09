@@ -30,8 +30,8 @@ STOPSIGNAL SIGRTMIN+3
 
 #setup user
 RUN useradd -s /bin/bash -d /opt/stack -m stack
+RUN apt-get update && apt-get install sudo -y 
 RUN sudo chmod +x /opt/stack
-RUN apt-get install sudo -y || yum install -y sudo
 RUN echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
 RUN sudo su stack && cd ~
 # Cleanup unneeded services
