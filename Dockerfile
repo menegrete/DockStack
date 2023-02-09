@@ -27,6 +27,13 @@ ENV container docker
 ###RUN systemctl set-default multi-user.target
 # Gracefully stop systemd
 STOPSIGNAL SIGRTMIN+3
+
+#setup user
+RUN useradd -s /bin/bash -d /opt/stack -m stack
+RUN sudo chmod +x /opt/stack
+RUN apt-get install sudo -y || yum install -y sudo
+RUN echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+RUN sudo su stack && cd ~
 # Cleanup unneeded services
 RUN find /etc/systemd/system \
          /lib/systemd/system \
