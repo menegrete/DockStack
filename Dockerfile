@@ -69,13 +69,6 @@ RUN apt-get update && apt-get --assume-yes --no-install-recommends install \
     # Cleanup
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Setup non-Root user "stack", as required by stack.sh
-RUN useradd -s /bin/bash -d /opt/stack -m stack
-RUN sudo chmod +x /opt/stack
-RUN echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
-RUN sudo chown --recursive stack /devstack/
-RUN sudo su stack && cd ~
-
 ARG DEVSTACK_BRANCH="master"
 ARG PROJECTS_BRANCH="master"
 # This OpenStack project repositories will be downloaded
@@ -104,6 +97,13 @@ RUN git clone https://opendev.org/openstack/devstack --branch $DEVSTACK_BRANCH &
             --depth 1 \
             --single-branch; \
     done
+
+# Setup non-Root user "stack", as required by stack.sh
+RUN useradd -s /bin/bash -d /opt/stack -m stack
+RUN sudo chmod +x /opt/stack
+RUN echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+RUN sudo chown --recursive stack /devstack/
+RUN sudo su stack && cd ~
 
 # Pre-Install DevStack System Dependencies to Speedup Docker Run
 RUN /devstack/tools/install_prereqs.sh \
